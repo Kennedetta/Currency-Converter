@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<form action="/" method="post">
+    <div>
+        <select name="starting" autofocus>
+            {% for i in currencies %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>
+        <select name="ending">
+            {% for i in currencies %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <input name="starting_amount" placeholder="Amount" id="starting_amount" type="text">
+        <input name="ending_amount" disabled readonly type="text" placeholder="{{ ending_amount }}">     
+    </div>
+    <div>
+        <button type="submit">Confirm</button>
+    </div>
+</form>
+
+These rates have been updated as recently as {{ time }}
+{% endblock %}

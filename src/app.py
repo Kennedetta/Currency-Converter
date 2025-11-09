@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify  
 import requests
 
 app = Flask(__name__)
@@ -19,15 +19,28 @@ def index():
         print(currencies)
         ending_amount = "Amount"
         return render_template("index.html", time=time, currencies=currencies, ending_amount=ending_amount)
+    
     else:
-        starting_currency = request.form.get("starting")
-        ending_currency = request.form  .get("ending")
+        # One meth
+            # starting_currency = request.form.get("starting")
+            # ending_currency = request.form.get("ending")
+
+            # starting_amount = int(request.form.get("starting_amount"))
+            # conversion_rate = rates[ending_currency.lower()] / rates[starting_currency.lower()]
+            
+            # ending_amount = starting_amount * conversion_rate
+            # print(ending_amount)
+
+            # # starting_amount * 
+            # return render_template("index.html", time=time, currencies=currencies, ending_amount=ending_amount)
+        starting = request.args.get("starting")
+        ending = request.args.get("ending")
+        starting_amount = request.args.get("starting_amount")
 
         starting_amount = int(request.form.get("starting_amount"))
-        conversion_rate = rates[ending_currency.lower()] / rates[starting_currency.lower()]
-        
+        conversion_rate = rates[ending.lower()] / rates[starting.lower()]
+
         ending_amount = starting_amount * conversion_rate
         print(ending_amount)
 
-        # starting_amount * 
         return render_template("index.html", time=time, currencies=currencies, ending_amount=ending_amount)

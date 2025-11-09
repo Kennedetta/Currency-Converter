@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block main %}
-<form action="/" method="post">
+<!-- <form action="/" method="post">
     <div>
         <select name="starting" autofocus>
             {% for i in currencies %}
@@ -19,9 +19,41 @@
         <input name="ending_amount" disabled readonly type="text" placeholder="{{ ending_amount }}">     
     </div>
     <div>
-        <button type="submit">Confirm</button>
+        <button type="submit">Convert</button>
     </div>
-</form>
+</form> -->
+
+<div>
+    <select id="starting" autofocus>
+        {% for i in currencies %}
+        <option value="{{ i }}">{{ i }}</option>
+        {% endfor %}
+    </select>
+    <select id="ending">
+        {% for i in currencies %}
+        <option value="{{ i }}">{{ i }}</option>
+        {% endfor %}
+    </select>
+</div>
+<div>
+    <input id="starting_amount" placeholder="Amount" id="starting_amount" type="text">
+    <input id="ending_amount" disabled readonly type="text" placeholder="{{ ending_amount }}">     
+</div>
+<div>
+    <button type="submit">Convert</button>
+</div>
+
+<script>
+    document.getElementById("submit").addEventListener("click", async () => {
+        // Create variables
+        let starting_amount = document.getElementById("starting_amount").value;
+        let starting = document.getElementById("starting").value;
+        let ending = document.getElementById("ending").value;
+
+        let response = await fetch("/?starting=${starting}&ending=${ending}&starting_amount=${starting_amount}");
+        let data = await response.json();
+    })
+</script>
 
 These rates have been updated as recently as {{ time }}
 {% endblock %}

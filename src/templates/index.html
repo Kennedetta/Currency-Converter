@@ -40,7 +40,7 @@
     <input id="ending_amount" disabled readonly type="text" placeholder="{{ ending_amount }}">     
 </div>
 <div>
-    <button type="submit">Convert</button>
+    <button type="submit" id="submit">Convert</button>
 </div>
 
 <script>
@@ -49,9 +49,13 @@
         let starting_amount = document.getElementById("starting_amount").value;
         let starting = document.getElementById("starting").value;
         let ending = document.getElementById("ending").value;
-
-        let response = await fetch("/?starting=${starting}&ending=${ending}&starting_amount=${starting_amount}");
+        
+        // Fetch api data from server
+        let response = await fetch(`/?starting=${starting}&ending=${ending}&starting_amount=${starting_amount}`);
         let data = await response.json();
+
+        // Edit text value
+        document.getElementById("ending_amount").value = data.converted.toFixed(2);
     })
 </script>
 

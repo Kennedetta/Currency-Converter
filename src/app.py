@@ -15,32 +15,18 @@ if response.status_code == 200:
 @app.route('/', methods=["GET", "POST"])
 def index():
     currencies = [c.upper() for c in rates.keys()]
-    if request.method == "GET":
-        print(currencies)
-        ending_amount = "Amount"
-        return render_template("index.html", time=time, currencies=currencies, ending_amount=ending_amount)
-    
-    else:
-        # One meth
-            # starting_currency = request.form.get("starting")
-            # ending_currency = request.form.get("ending")
 
-            # starting_amount = int(request.form.get("starting_amount"))
-            # conversion_rate = rates[ending_currency.lower()] / rates[starting_currency.lower()]
-            
-            # ending_amount = starting_amount * conversion_rate
-            # print(ending_amount)
+    starting = request.args.get("starting")
+    ending = request.args.get("ending")
+    starting_amount = request.args.get("starting_amount")
 
-            # # starting_amount * 
-            # return render_template("index.html", time=time, currencies=currencies, ending_amount=ending_amount)
-        starting = request.args.get("starting")
-        ending = request.args.get("ending")
-        starting_amount = request.args.get("starting_amount")
+    # If no query params, render the main HTML page
+    if not (starting and ending and starting_amount):
+        return render_template("index.html", time=time, currencies=currencies, ending_amount="Amount")
 
-        starting_amount = int(request.form.get("starting_amount"))
-        conversion_rate = rates[ending.lower()] / rates[starting.lower()]
+    # If query params exist (i.e. fetch request)
+    starting_amount = float(starting_amount)
+    conversion_rate = rates[ending.lower()] / rates[starting.lower()]
+    ending_amount = starting_amount * conversion_rate
 
-        ending_amount = starting_amount * conversion_rate
-        print(ending_amount)
-
-        return render_template("index.html", time=time, currencies=currencies, ending_amount=ending_amount)
+    return jsonify({"converted": ending_amount, "rate": conversion_rate})

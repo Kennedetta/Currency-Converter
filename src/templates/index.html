@@ -1,27 +1,7 @@
 {% extends "layout.html" %}
 
 {% block main %}
-<!-- <form action="/" method="post">
-    <div>
-        <select name="starting" autofocus>
-            {% for i in currencies %}
-            <option value="{{ i }}">{{ i }}</option>
-            {% endfor %}
-        </select>
-        <select name="ending">
-            {% for i in currencies %}
-            <option value="{{ i }}">{{ i }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div>
-        <input name="starting_amount" placeholder="Amount" id="starting_amount" type="text">
-        <input name="ending_amount" disabled readonly type="text" placeholder="{{ ending_amount }}">     
-    </div>
-    <div>
-        <button type="submit">Convert</button>
-    </div>
-</form> -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <div>
     <select id="starting" autofocus>
@@ -43,7 +23,13 @@
     <button type="submit" id="submit">Convert</button>
 </div>
 
+<div id="chart-container" style="display:none;">
+    <canvas id="myChart"></canvas>
+</div>
+
 <script>
+    let chart = null;
+
     document.getElementById("submit").addEventListener("click", async () => {
         // Create variables
         let starting_amount = document.getElementById("starting_amount").value;
@@ -56,7 +42,41 @@
 
         // Edit text value
         document.getElementById("ending_amount").value = data.converted.toFixed(2);
-    })
+        let exchange_dates = data.exchange_dates;
+        let prices = data.prices;
+
+        for (let i in prices) {
+            prices[i] = prices[i].toFixed(2);
+        }
+
+        const ctx = document.getElementById('myChart');
+
+        if (chart !== null) {   
+            chart.destroy();
+        }
+
+        // Create the Line Graph
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+            labels: exchange_dates,
+            datasets: [{
+                label: '# of Votes',
+                data: prices,
+                borderWidth: 1
+            }]
+            },
+            options: {
+            scales: {
+                y: {
+                beginAtZero: true
+                }
+            }
+            }
+        })
+
+        document.getElementById("chart-container").style.display = "block";
+        });
 </script>
 
 These rates have been updated as recently as {{ time }}

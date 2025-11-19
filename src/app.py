@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, jsonify  
+from datetime import datetime, timedelta
+from flask import Flask, render_template, request, jsonify
 import requests
 
 app = Flask(__name__)
@@ -11,6 +12,8 @@ if response.status_code == 200:
     data = response.json()
     time = data["date"]
     rates = data["eur"]
+
+@app.route('/test', methods=["GET"])
         
 @app.route('/', methods=["GET", "POST"])
 def index():
@@ -29,4 +32,22 @@ def index():
     conversion_rate = rates[ending.lower()] / rates[starting.lower()]
     ending_amount = starting_amount * conversion_rate
 
-    return jsonify({"converted": ending_amount, "rate": conversion_rate})
+    # Finding previous dates to feed into the API
+    today = datetime.today()
+    exchange_dates = []
+
+    for i in range(7):
+        day = today - timedelta(weeks=i)
+        exchange_dates.append(day.strftime("%Y-%m-%d"))
+
+    exchange_dates.reverse()
+    prices = []
+
+    for i in range(7):
+        data = (requests.get(f"https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@{exchange_dates[i]}/v1/currencies/eur.json").json())
+        new_rates = data["eur"]
+        converted_rate = new_rates[ending.lower()] / new_rates[starting.lower()]
+        ending_amount = starting_amount * converted_rate
+        prices.append(ending_amount)
+
+    return jsonify({"converted": ending_amount, "rate": conversion_rate, "exchange_dates": exchange_dates, "prices": prices})

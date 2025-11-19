@@ -56,15 +56,15 @@
         }
 
         // Create the Line Graph
-        new Chart(ctx, {
+        chart = new Chart(ctx, {
             type: 'line',
             data: {
             labels: exchange_dates,
             datasets: [{
-                label: '# of Votes',
+                label: 'Price at the time in £',
                 data: prices,
                 borderWidth: 1
-            }]
+            }] 
             },
             options: {
             scales: {

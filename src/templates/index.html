@@ -55,6 +55,8 @@
             chart.destroy();
         }
 
+        document.getElementById("chart-container").style.display = "block";
+
         // Create the Line Graph
         chart = new Chart(ctx, {
             type: 'line',
@@ -74,8 +76,6 @@
             }
             }
         })
-
-        document.getElementById("chart-container").style.display = "block";
         });
 </script>
 

@@ -8,11 +8,17 @@
     <title>Currency Converter</title>
 </head>
 <body>
-
     <div class="header">
+        <div class="topnav">
+            <a class="active" href="#home">Home</a>
+            <a href="/">Currency</a>
+            <a href="/distance">Distance</a>
+        </div>
         <h1>Converter</h1>
         <hr>
     </div>
-    {% block main %}{% endblock %}
+    <div class="center">
+        {% block main %}{% endblock %}
+    </div>
 </body>
 </html>

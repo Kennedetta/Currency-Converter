@@ -13,11 +13,40 @@ if response.status_code == 200:
     time = data["date"]
     rates = data["eur"]
 
-@app.route('/test', methods=["GET"])
-        
+@app.route('/distance', methods=["GET"])
+def distance():
+    measurements = {
+        "Kilometer": 1000,
+        "Hectometer": 100,
+        "Decameter": 10,
+        "Meter": 1,
+        "Decimeter": 0.1,
+        "Centimeter": 0.01,
+        "Millimeter": 0.001,
+        "Micrometer": 0.000001,
+        "Nanometer": 0.000000001,
+        "Picometer": 0.000000000001,
+        "Femtometer": 0.000000000000001
+    }
+
+    starting = request.args.get("starting")
+    ending = request.args.get("ending")
+    starting_amount = request.args.get("starting_amount")
+
+    # If no query params, render the main HTML page
+    if not (starting and ending and starting_amount):
+        print(list(measurements.keys()))
+        return render_template("distance.html", time=time, measurements=list(measurements.keys()), ending_amount="Amount")
+    
+    starting_amount = float(starting_amount)
+    conversion_rate = measurements[starting] / measurements[ending]
+    ending_amount = starting_amount * conversion_rate
+
+    return jsonify({"converted": ending_amount})
+
 @app.route('/', methods=["GET", "POST"])
 def index():
-    currencies = [c.upper() for c in rates.keys()]
+    currencies = [c.upper() for c in rates.keys() if len(c) == 3]
 
     starting = request.args.get("starting")
     ending = request.args.get("ending")

@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+<div>
+    <select id="starting" autofocus>
+        {% for i in measurements %}
+        <option value="{{ i }}">{{ i }}</option>
+        {% endfor %}
+    </select>
+    <select id="ending">
+        {% for i in measurements %}
+        <option value="{{ i }}">{{ i }}</option>
+        {% endfor %}
+    </select>
+</div>
+<div>
+    <input id="starting_amount" placeholder="Amount" type="text">
+    <input id="ending_amount" disabled readonly type="text" placeholder="{{ ending_amount }}">     
+</div>
+<div>
+    <button type="submit" id="submit">Convert</button>
+</div>
+
+<script>
+    document.getElementById("submit").addEventListener("click", async () => {
+        // Create variables
+        let starting_amount = document.getElementById("starting_amount").value;
+        let starting = document.getElementById("starting").value;
+        let ending = document.getElementById("ending").value;
+        
+        // Fetch api data from server
+        let response = await fetch(`/distance?starting=${starting}&ending=${ending}&starting_amount=${starting_amount}`);
+        let data = await response.json();
+
+        // Edit text value
+        let output = data.converted;
+
+        if (Math.abs(output) < 0.001) {
+            output = output.toFixed(12);
+        } else {
+            output = output.toFixed(4);
+        }
+
+        document.getElementById("ending_amount").value = output;
+        
+        })
+</script>
+
+{% endblock %}
